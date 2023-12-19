@@ -9,6 +9,7 @@ public static class ApplicationServiceRegistration  //  applicationla ilgili bü
     // biz neyi extend edeceksek onu this keyword ü ile veriyoruz.
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddMediatR(configuration =>
         {
             // burada mediatr a diyoruz ki, git bütün assembly yi tara orada commandleri queryleri bul onların handlerlerini bul birbiriyle eşleştir listene koy ben yarın bir command send yaparsam git handler ını bul calıstır.
