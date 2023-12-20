@@ -1,4 +1,7 @@
 ﻿using Application.Features.Brands.Commands.Create;
+using Application.Features.Brands.Queries.GetList;
+using Core.Application.Requests;
+using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
@@ -13,6 +16,14 @@ public class BrandsController : BaseController // mediator inject i icin olustur
         //CreateBrandCommand gelen komutu mediator a yollamam lazım , mediatr inject ederek bunu bütün controller larda yapmamız gerek ve bununla tek tek ugrasmak istemiyoruz. bunun icin bir BaseController class'ı olusturuyoruz
          CreatedBrandResponse response = await Mediator.Send(createBrandCommand); //normalde uygulama yayına alındığında mediator tüm assembly yi tarıyor ve commandleri ve handlerlarını bir mapmiş gibi ekliyor listesine. yani basit bir şekilde createBrandCommand geldiğinde gidiyor bakıyor handler ına onu calıstırıyor.
 
+        return Ok(response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
+    {
+        GetListBrandQuery getListBrandQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListBrandListItemDto> response = await Mediator.Send(getListBrandQuery);
         return Ok(response);
     }
 }
