@@ -23,7 +23,7 @@ public class GetByIdBrandQuery : IRequest<GetByIdBrandResponse>
 
         public async Task<GetByIdBrandResponse> Handle(GetByIdBrandQuery request, CancellationToken cancellationToken)
         {
-            Brand? brand = await _brandRepository.GetAsync(predicate: b=>b.Id == request.Id, cancellationToken : cancellationToken);
+            Brand? brand = await _brandRepository.GetAsync(predicate: b=>b.Id == request.Id, cancellationToken : cancellationToken); // GetAsync methodu içine withDeleted:true parametresi geçersek silinenleri de getirir. çünkü biz soft delete yapıyoruz.
 
             GetByIdBrandResponse response = _mapper.Map<GetByIdBrandResponse>(brand);
 
