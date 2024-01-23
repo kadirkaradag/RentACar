@@ -13,7 +13,6 @@ public class Car : Entity<Guid>
     public CarState CarState { get; set; }
 
     public virtual Model? Model { get; set; }
-    public virtual ICollection<Model> Models { get; set; }
 
     public Car()
     {

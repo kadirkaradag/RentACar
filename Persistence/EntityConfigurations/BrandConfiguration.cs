@@ -14,11 +14,13 @@ public class BrandConfiguration : IEntityTypeConfiguration<Brand>  // BaseDbCont
         builder.Property(b => b.Name).HasColumnName("Name").IsRequired();
         builder.Property(b => b.CreatedDate).HasColumnName("CreatedDate").IsRequired();
         builder.Property(b => b.UpdatedDate).HasColumnName("UpdatedDate");
-        builder.Property(b => b.DeletedDate).HasColumnName("UpdatedDate");
+        builder.Property(b => b.DeletedDate).HasColumnName("DeletedDate");
+
+        builder.HasIndex(b=>b.Name, name:"UK_Brands_Name").IsUnique();  //marka adı unique dir.
+
+        builder.HasMany(b => b.Models); //markanın birden fazla modeli olabilir.
 
         //brand ile ilgili sorgulama yapıldıgında her sorguda mutlaka eklemek istedigimiz global filtre ekleyeceğiz. mesela default olarak silinenleri getirme gibi.
-
         builder.HasQueryFilter(b=>!b.DeletedDate.HasValue); // DeletedDate verisi yoksa bunu uygula dedik.
-
     }
 }
