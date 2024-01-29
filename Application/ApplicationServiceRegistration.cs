@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Core.Application.Rules;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace Application;
@@ -10,6 +11,9 @@ public static class ApplicationServiceRegistration  //  applicationla ilgili bü
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+        services.AddSubClassesOfType(Assembly.GetExecutingAssembly(), typeof(BaseBusinessRules));
+
         services.AddMediatR(configuration =>
         {
             // burada mediatr a diyoruz ki, git bütün assembly yi tara orada commandleri queryleri bul onların handlerlerini bul birbiriyle eşleştir listene koy ben yarın bir command send yaparsam git handler ını bul calıstır.
@@ -18,4 +22,24 @@ public static class ApplicationServiceRegistration  //  applicationla ilgili bü
 
         return services;
     }
+
+    public static IServiceCollection AddSubClassesOfType(
+        this IServiceCollection services,
+        Assembly assembly,
+        Type type,
+        Func<IServiceCollection, Type, IServiceCollection>? addWithLifeCycle = null)
+    {//bu bir extension method.
+        //git assembly icinde benim subclass olarak verdigim (BaseBusinessRules) olanları bul onları lifecyle ına yani ioc ye ekle.
+        var types = assembly.GetTypes().Where(t => t.IsSubclassOf(type) && type != t).ToList();
+        foreach (var t in types)
+        {
+            if (addWithLifeCycle == null)
+                services.AddScoped(t);
+            else
+                addWithLifeCycle(services, type);
+        }
+
+        return services;
+    }
+
 }
