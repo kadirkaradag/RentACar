@@ -1,4 +1,6 @@
-﻿using Core.Application.Rules;
+﻿using Core.Application.Pipelines.Validation;
+using Core.Application.Rules;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -14,10 +16,14 @@ public static class ApplicationServiceRegistration  //  applicationla ilgili bü
 
         services.AddSubClassesOfType(Assembly.GetExecutingAssembly(), typeof(BaseBusinessRules));
 
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
         services.AddMediatR(configuration =>
         {
             // burada mediatr a diyoruz ki, git bütün assembly yi tara orada commandleri queryleri bul onların handlerlerini bul birbiriyle eşleştir listene koy ben yarın bir command send yaparsam git handler ını bul calıstır.
             configuration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()); //mevcut Assembly de ara demiş oluyoruz.
+
+            configuration.AddOpenBehavior(typeof(RequestValidationBehavior<,>));
         });
 
         return services;
