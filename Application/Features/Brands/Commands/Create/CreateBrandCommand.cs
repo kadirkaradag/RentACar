@@ -1,14 +1,17 @@
 ﻿using Application.Features.Brands.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
+using Core.Application.Pipelines.Transaction;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Features.Brands.Commands.Create;
 
-public class CreateBrandCommand : IRequest<CreatedBrandResponse> // bir request olduğu için IRequest interface inden türeyecek. Apiden bir CreateBrandCommand gelecek, biz bunu brand domainine cevirip db ye kaydedeceğiz.
-                                                                 // IRequest interface inde <> içerisine CreateBrandCommand gelince IRequest'in ona geri ne döndüreceğini vermemizi istiyor yani bir response modeli, o da                 CreatedBrandResponse olacak
-                                                                 //Mediator ne yapıyor ? , IRequest gördü, aa benimle ilgili bir şey var dedi benim bunu handle etmem lazım dedi bunu da her command'ın handler i var onunla yapıyor.
+public class CreateBrandCommand : IRequest<CreatedBrandResponse> , ITransactionalRequest
+// ITransactionalRequest, bir yapıda 2 tablo değişiyorsa biri patlarsa diğeri de geri alınsın diye yaptıgımız bir yapı
+// bir request olduğu için IRequest interface inden türeyecek. Apiden bir CreateBrandCommand gelecek, biz bunu brand domainine cevirip db ye kaydedeceğiz.
+// IRequest interface inde <> içerisine CreateBrandCommand gelince IRequest'in ona geri ne döndüreceğini vermemizi istiyor yani bir response modeli, o da CreatedBrandResponse olacak
+//Mediator ne yapıyor ? , IRequest gördü, aa benimle ilgili bir şey var dedi benim bunu handle etmem lazım dedi bunu da her command'ın handler i var onunla yapıyor.
 {
     public string Name { get; set; }
 
@@ -33,6 +36,7 @@ public class CreateBrandCommand : IRequest<CreatedBrandResponse> // bir request 
             brand.Id = Guid.NewGuid();
 
             await _brandRepository.AddAsync(brand);
+            //await _brandRepository.AddAsync(brand); bunu açarsam ITransactionalRequest devreye giriyor ve dbde yapılan değişiklikleri geri alıyor
 
             CreatedBrandResponse createdBrandResponse = _mapper.Map<CreatedBrandResponse>(brand);
             return createdBrandResponse;
