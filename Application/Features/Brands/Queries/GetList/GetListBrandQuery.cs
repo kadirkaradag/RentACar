@@ -19,6 +19,8 @@ public class GetListBrandQuery : IRequest<GetListResponse<GetListBrandListItemDt
 
     public TimeSpan? SlidingExpiration { get; }
 
+    public string? CacheGroupKey => "GetBrands";
+
     public class GetListBrandQueryHandler : IRequestHandler<GetListBrandQuery, GetListResponse<GetListBrandListItemDto>> // GetListResponse core projeden geliyor, tüm list requestleri için dönecek generic bir response.
     {
         private readonly IBrandRepository _brandRepository;

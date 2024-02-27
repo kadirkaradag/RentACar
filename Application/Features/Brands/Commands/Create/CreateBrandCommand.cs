@@ -1,19 +1,26 @@
 ﻿using Application.Features.Brands.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
+using Core.Application.Pipelines.Caching;
 using Core.Application.Pipelines.Transaction;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Features.Brands.Commands.Create;
 
-public class CreateBrandCommand : IRequest<CreatedBrandResponse> , ITransactionalRequest
+public class CreateBrandCommand : IRequest<CreatedBrandResponse> , ITransactionalRequest, ICacheRemoverRequest
 // ITransactionalRequest, bir yapıda 2 tablo değişiyorsa biri patlarsa diğeri de geri alınsın diye yaptıgımız bir yapı
 // bir request olduğu için IRequest interface inden türeyecek. Apiden bir CreateBrandCommand gelecek, biz bunu brand domainine cevirip db ye kaydedeceğiz.
 // IRequest interface inde <> içerisine CreateBrandCommand gelince IRequest'in ona geri ne döndüreceğini vermemizi istiyor yani bir response modeli, o da CreatedBrandResponse olacak
 //Mediator ne yapıyor ? , IRequest gördü, aa benimle ilgili bir şey var dedi benim bunu handle etmem lazım dedi bunu da her command'ın handler i var onunla yapıyor.
 {
     public string Name { get; set; }
+
+    public string CacheKey => "";
+
+    public bool BypassCache => false;
+
+    public string? CacheGroupKey => "GetBrands";
 
     public class CreateBrandCommandHandler : IRequestHandler<CreateBrandCommand, CreatedBrandResponse> // yani sana CreateBrandCommand böyle bir command gelirse CreateBrandCommandHandler içini çalıştır demiş oluyoruz..
     {

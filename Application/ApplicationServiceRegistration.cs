@@ -27,7 +27,8 @@ public static class ApplicationServiceRegistration  //  applicationla ilgili bü
 
             configuration.AddOpenBehavior(typeof(RequestValidationBehavior<,>));
             configuration.AddOpenBehavior(typeof(TransactionScopeBehavior<,>));
-            configuration.AddOpenBehavior(typeof(CachingBehaviour<,>));
+            configuration.AddOpenBehavior(typeof(CachingBehavior<,>));
+            configuration.AddOpenBehavior(typeof(CacheRemovingBehavior<,>));
 
         });
 
