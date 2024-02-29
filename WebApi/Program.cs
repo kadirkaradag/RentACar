@@ -9,13 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
+builder.Services.AddHttpContextAccessor();
 
-//builder.Services.AddDistributedMemoryCache(); //inMemory cache
+
+//redis kullanacaksak bunu kapatacagýz ve inmemory cachle ile calýsacak
+builder.Services.AddDistributedMemoryCache(); //inMemory cache
 
 //redis icin microsoft un StackExchangeRedis paketini kurduk webApi projesine
 //docker ý baslattým, cmd ye; docker run --name narch-redis -p 6379:6379 -d redis
 //yazdýk redis i kurdu, sonra redis insigth tool unu indirdik sitesinden. o kendi docker ýn redisini gördü ve projeyi calýstýrýp request attýgýmýzda  redis insigth üzerinde requesti gördük.
-builder.Services.AddStackExchangeRedisCache(opt => opt.Configuration = "localhost:6379");  
+//redis kullanacaksak asagýdaki kodu acacaðýz.
+//builder.Services.AddStackExchangeRedisCache(opt => opt.Configuration = "localhost:6379");  
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

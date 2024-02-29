@@ -2,13 +2,14 @@
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Caching;
+using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Features.Brands.Commands.Create;
 
-public class CreateBrandCommand : IRequest<CreatedBrandResponse> , ITransactionalRequest, ICacheRemoverRequest
+public class CreateBrandCommand : IRequest<CreatedBrandResponse> , ITransactionalRequest, ICacheRemoverRequest, ILoggableRequest
 // ITransactionalRequest, bir yapıda 2 tablo değişiyorsa biri patlarsa diğeri de geri alınsın diye yaptıgımız bir yapı
 // bir request olduğu için IRequest interface inden türeyecek. Apiden bir CreateBrandCommand gelecek, biz bunu brand domainine cevirip db ye kaydedeceğiz.
 // IRequest interface inde <> içerisine CreateBrandCommand gelince IRequest'in ona geri ne döndüreceğini vermemizi istiyor yani bir response modeli, o da CreatedBrandResponse olacak

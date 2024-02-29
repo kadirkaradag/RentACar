@@ -1,7 +1,11 @@
 ﻿using Core.Application.Pipelines.Caching;
+using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using Core.Application.Pipelines.Validation;
 using Core.Application.Rules;
+using Core.CrossCuttingConcerns.Exceptions.Handlers;
+using Core.CrossCuttingConcerns.SeriLog;
+using Core.CrossCuttingConcerns.SeriLog.Loggers;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -29,8 +33,11 @@ public static class ApplicationServiceRegistration  //  applicationla ilgili bü
             configuration.AddOpenBehavior(typeof(TransactionScopeBehavior<,>));
             configuration.AddOpenBehavior(typeof(CachingBehavior<,>));
             configuration.AddOpenBehavior(typeof(CacheRemovingBehavior<,>));
+            configuration.AddOpenBehavior(typeof(LoggingBehavior<,>)); // HttpContextAccessor program.cs icine eklendi.
 
         });
+        services.AddSingleton<HttpExceptionHandler, HttpExceptionHandler>();
+        services.AddSingleton<LoggerServiceBase, FileLogger>();  //biri senden LoggerServiceBase istediğinde onu FileLogger ile logla
 
         return services;
     }

@@ -1,6 +1,7 @@
 ﻿using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Caching;
+using Core.Application.Pipelines.Logging;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Persistence.Paging;
@@ -9,7 +10,9 @@ using MediatR;
 
 namespace Application.Features.Brands.Queries.GetList;
 
-public class GetListBrandQuery : IRequest<GetListResponse<GetListBrandListItemDto>>, ICachableRequest // kullanıcının bize vereceği model
+public class GetListBrandQuery : IRequest<GetListResponse<GetListBrandListItemDto>>, 
+    ICachableRequest, //redis kullanacaksak bunu acacağız.
+    ILoggableRequest // kullanıcının bize vereceği model
 {
     public PageRequest PageRequest { get; set; }  // sayfalama bilgisi, hangi indexten kaçar tane vs.
 
