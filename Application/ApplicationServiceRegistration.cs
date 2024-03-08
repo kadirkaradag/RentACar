@@ -37,7 +37,12 @@ public static class ApplicationServiceRegistration  //  applicationla ilgili bü
 
         });
         services.AddSingleton<HttpExceptionHandler, HttpExceptionHandler>();
-        services.AddSingleton<LoggerServiceBase, FileLogger>();  //biri senden LoggerServiceBase istediğinde onu FileLogger ile logla
+
+        //File a log almak icin
+        //services.AddSingleton<LoggerServiceBase, FileLogger>();  //biri senden LoggerServiceBase istediğinde onu FileLogger ile logla
+
+        //MsSql e Log almak icin
+        services.AddSingleton<LoggerServiceBase, MsSqlLogger>();  //biri senden LoggerServiceBase istediğinde onu MsSqlLogger ile logla
 
         return services;
     }
